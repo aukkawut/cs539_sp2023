@@ -209,8 +209,33 @@ $$f(x) = \frac{\beta^\alpha}{\Gamma(\alpha)} x^{-\alpha-1}\exp\left(-\frac{\beta
     Minimize the log-likelihood with respect to $\alpha$ while fixing $\beta$ 
         \begin{align*}
         \dfrac{\partial}{\partial \alpha}\ln\left(\mathcal{L}(\alpha,\beta|X)\right) &= \dfrac{\partial}{\partial \alpha}\ln\left[\left(\frac{\beta^{\alpha}}{\Gamma(\alpha)}\right)^N\exp\left(-\sum_{i=1}^N\frac{\beta}{x_i}\right) \prod_{k=1}^{N}x^{-(\alpha+1)}_k\right]\\
-        &=\dfrac{\partial}{\partial \alpha} \left[N\ln\left(\frac{\beta^{\alpha}}{\Gamma(\alpha)}\right) -\sum_{i=1}^{N}\frac{\beta}{x_k}\right]
+        &=\dfrac{\partial}{\partial \alpha} \left[N\ln\left(\frac{\beta^{\alpha}}{\Gamma(\alpha)}\right) -\sum_{i=1}^{N}\frac{\beta}{x_i} + \sum_{i=1}^N x_k^{-(\alpha + 1)}\right]\\
+        &=\dfrac{\partial}{\partial \alpha} \left[N{\alpha}\ln(\beta)- N\ln(\Gamma(\alpha))+\sum_{k=1}^N x_k^{-(\alpha + 1)}\right]\\ 
+        &= N\ln(\beta) - N\psi(\alpha) + \sum_{k=1}^N (-x_k^{-(\alpha+1)}\ln(x_k))
     \end{align*}
+    and with respect to $\beta$ while fixing $\alpha$
+    \begin{align*}
+        \dfrac{\partial}{\partial \beta} \left[N{\alpha}\ln(\beta)- N\ln(\Gamma(\alpha)) - \sum_{i=1}^N\frac{\beta}{x_i} \right] &= \frac{N\alpha}{\beta} - \sum_{i=1}^N \frac{1}{x_i}
+    \end{align*}
+    Now, we can set the partial derivative to zero and solve for $\alpha$ and $\beta$.
+    \begin{align}
+         N\ln(\beta) - N\psi(\alpha) + \sum_{k=1}^N (-x_k^{-(\alpha+1)}\ln(x_k)) &= 0 \label{eq:l1}\\
+         \frac{N\alpha}{\beta} - \sum_{i=1}^N \frac{1}{x_i} &= 0 \label{eq:l2}
+    \end{align}
+    From the equation \ref{eq:l2}, we can see that $\beta = \frac{N\alpha}{\sum_{i=1}^N \frac{1}{x_i}}$. Substituting this into equation \ref{eq:l1}, we can solve for $\alpha$.
+    That is,
+    \begin{align*}
+        N\ln\left(\frac{N\alpha}{\sum_{i=1}^N \frac{1}{x_i}}\right) - N\psi(\alpha) + \sum_{k=1}^N (-x_k^{-(\alpha+1)}\ln(x_k)) &= 0 \\
+        N\ln\left(\frac{N}{\sum_{i=1}^N \frac{1}{x_i}}\right) - N\psi(\alpha) + \sum_{k=1}^N (-x_k^{-(\alpha+1)}\ln(x_k)) &= 0 \\
+        \sum_{k=1}^N (-x_k^{-(\alpha+1)}\ln(x_k)) &= N\psi(\alpha) - N\ln\left(\frac{N}{\sum_{i=1}^N \frac{1}{x_i}}\right) \\
+        \sum_{k=1}^N (-x_k^{-(\alpha+1)}\ln(x_k)) &= N\psi(\alpha) - N\ln(N) + N\ln\left(\sum_{i=1}^N \frac{1}{x_i}\right) \\
+        \sum_{k=1}^N (-x_k^{-(\alpha+1)}\ln(x_k)) &= N\psi(\alpha) - N\ln(N) + N\ln\left(\frac{1}{\frac{1}{N}\sum_{i=1}^N \frac{1}{x_i}}\right) \\
+        \sum_{k=1}^N (-x_k^{-(\alpha+1)}\ln(x_k)) &= N\psi(\alpha) - N\ln(N) + N\ln\left(\frac{N}{\sum_{i=1}^N \frac{1}{x_i}}\right) \\
+        \sum_{k=1}^N (-x_k^{-(\alpha+1)}\ln(x_k)) &= N\psi(\alpha) + N\ln\left(\sum_{i=1}^N \frac{1}{x_i}\right)\\
+        \psi(\alpha) &= \frac{1}{n}\sum_{k=1}^N (-x_k^{-(\alpha+1)}\ln(x_k)) - \ln(\sum_{i=1}^N \frac{1}{x_i}) \\
+        \alpha &= \psi^{-1}\left( \frac{1}{n}\sum_{k=1}^N (-x_k^{-(\alpha+1)}\ln(x_k)) - \ln(\sum_{i=1}^N \frac{1}{x_i})\right)
+    \end{align*}
+    where $\psi^{-1}$ is the inverse of the digamma function.
     \end{sol}
     \color{black}
     \item Discuss if $f(x)$ follows an exponential family distribution or not. 
@@ -242,11 +267,13 @@ $$f(x) = \frac{\beta^\alpha}{\Gamma(\alpha)} x^{-\alpha-1}\exp\left(-\frac{\beta
 first. 
 \color{blue}
 \begin{sol}
-    Using gamma prior, one can get the posterior of $c$ as
+    Using gamma prior, one can get the posterior of $c$ from conjugate prior,
     \begin{align*}
-        P(c|Y) &= \frac{P(Y|c)P(c)}{P(Y)} \\
-        &= \frac{c\exp\left(-c\sum_{i=1}^n y_i\right)\frac{1}{c^2}\frac{\beta^\alpha}{\Gamma(\alpha)}c^{\alpha+1}\exp\left(-\beta c\right)}{\int_{0}^{\infty} c\exp\left(-c\sum_{i=1}^n y_i\right)\frac{1}{c^2}\frac{\beta^\alpha}{\Gamma(\alpha)}c^{\alpha+1}\exp\left(-\beta c\right)\; dc}
+        P(c|Y) &\propto P(Y|c)P(c) \\
+        &= c^{n+\alpha - 1}\exp\left(-c\left(\left[\sum_{i=1}^n y\right] - \beta\right)\right)\\
+        P(c|Y) &\sim \text{Gamma}\left(n+\alpha, \left[\sum_{i=1}^n y\right] - \beta\right)
     \end{align*}
+That is, the posterior of $c$ would be a gamma distribution with parameters $n+\alpha$ and $\left[\sum_{i=1}^n y\right] - \beta$.
 \end{sol}
 \color{black}
 \end{enumerate}
