@@ -232,10 +232,22 @@ $$f(x) = \frac{\beta^\alpha}{\Gamma(\alpha)} x^{-\alpha-1}\exp\left(-\frac{\beta
     \item Discuss if $X$ is an inverse gamma distribution with $\alpha =1$  and $\beta =c$ , then $Y=1/X$ is an exponential distribution with rate $c$ 
     \color{blue}
     \begin{sol}
-        Consider the name of the inverse gamma distribution; its inverse would be gamma distribution.
+        Using the CDF method, one can come to conclude that $P(X\geq 1/y) = 1-F(\frac{1}{y})$ for $Y = y$ and $Y = 1/X$. Thus, evaluate its derivative and we can get
+        $$g(y) = \frac{1}{y^2}f\left(\frac{1}{y}\right) = \frac{1}{y^2}\frac{\beta^\alpha}{\Gamma(\alpha)}y^{\alpha+1}\exp\left(-\beta y\right)$$
+        Let $\alpha = 1, \beta = c$ we will get exponential PDF.
+        $$g(y) = c\exp(-cy)$$
     \end{sol}
     \color{black}
     \item For distribution $Y$, and with a prior on $c$ define the posterior of $c$. Pick a proper prior for $c$ 
 first. 
+\color{blue}
+\begin{sol}
+    Using gamma prior, one can get the posterior of $c$ as
+    \begin{align*}
+        P(c|Y) &= \frac{P(Y|c)P(c)}{P(Y)} \\
+        &= \frac{c\exp\left(-c\sum_{i=1}^n y_i\right)\frac{1}{c^2}\frac{\beta^\alpha}{\Gamma(\alpha)}c^{\alpha+1}\exp\left(-\beta c\right)}{\int_{0}^{\infty} c\exp\left(-c\sum_{i=1}^n y_i\right)\frac{1}{c^2}\frac{\beta^\alpha}{\Gamma(\alpha)}c^{\alpha+1}\exp\left(-\beta c\right)\; dc}
+    \end{align*}
+\end{sol}
+\color{black}
 \end{enumerate}
 \end{document} 
