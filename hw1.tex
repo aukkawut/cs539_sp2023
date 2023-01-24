@@ -1,0 +1,241 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{amsthm}
+\usepackage{mathrsfs}
+\usepackage{mathtools}
+\usepackage{fancyvrb}
+\usepackage[margin=1in]{geometry}
+\usepackage{fancyhdr}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage{mathrsfs}
+\usepackage{tzplot}
+\usepackage{tikz}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\usepackage{titlesec}
+\usepackage{lmodern}
+\usepackage{etoolbox}
+\usepackage{csquotes}
+\usepackage{xcolor}
+\usepackage[shortlabels]{enumitem}
+%\usepackage{lipsum}
+
+\makeatletter
+\patchcmd{\section}{-3.5ex \@plus -1ex \@minus -.2ex}{-3.5ex \@plus -1ex \@minus -.2ex\setlength{\leftskip}{0cm}}{}{}
+\patchcmd{\subsection}{-3.25ex\@plus -1ex \@minus -.2ex}{3.25ex\@plus -1ex \@minus -.2ex\setlength{\leftskip}{0cm}}{}{}
+\patchcmd{\subsection}{1.5ex \@plus .2ex}{1.5ex \@plus .2ex\setlength{\leftskip}{2cm}}{}{}
+\makeatother
+\titleformat{\section}
+  {\normalfont\fontsize{12}{15}\bfseries}{\thesection}{1em}{}
+\pagestyle{fancy}
+\fancyhf{}
+\rhead{Aukkawut Ammartayakun}
+\lhead{CS 539 Machine Learning: Homework 1}
+\cfoot{\thepage}
+\title{Homework 1}
+\author{Aukkawut Ammartayakun\\CS 539 Machine Learning}
+\date{Spring 2023}
+\newcommand{\vtt}[1]{%
+  \text{\normalfont\ttfamily\detokenize{#1}}%
+}
+
+
+
+\newcommand{\indep}{\perp \!\!\! \perp}
+\begin{document}
+\newcommand{\fakesection}[1]{%
+  \par\refstepcounter{section}% Increase section counter
+  \sectionmark{#1}% Add section mark (header)
+  \addcontentsline{toc}{section}{\protect\numberline{\thesection}#1}% Add section to ToC
+  % Add more content here, if needed.
+}
+\newcommand{\fakesubsection}[1]{%
+  \par\refstepcounter{subsection}% Increase subsection counter
+  \subsectionmark{#1}% Add subsection mark (header)
+  \addcontentsline{toc}{subsection}{\protect\numberline{\thesubsection}#1}% Add subsection to ToC
+  % Add more content here, if needed.
+}
+\theoremstyle{definition}
+\newtheorem*{sol}{Solution}
+\maketitle
+\fakesection{q1}
+\noindent
+\Large{\textbf{Problem 1}}\normalsize
+\\
+
+Consider two variables $X$ and $Y$ with joint distribution $p(x, y)$. Prove the following two results
+\begin{enumerate}
+    \item $\mathbb{E}[X] = \mathbb{E}_Y\left[\mathbb{E}_X[X|Y]\right]$
+    \color{blue}
+    \begin{sol}
+        Consider the RHS,
+\begin{align*}
+    \mathbb{E}_Y\left[\mathbb{E}_X[X|Y]\right] &= \int_{\Omega_Y}f_Y(y)\;dy\\
+    &= \int_{\Omega_Y}\int_{\Omega_X}xf_{X|Y}(x|y)f_Y(y)\;dx\;dy\\
+    &= \int_{\Omega_Y}\int_{\Omega_X}xp(x,y)\;dx\;dy\\
+        &= \int_{\Omega_X}\int_{\Omega_Y}xp(x,y)\;dy\;dx\\
+        &= \int_{\Omega_X} xf_{X}(x)\;dx\\
+            &= \mathbb{E}[X]
+\end{align*}
+    \end{sol}
+    \color{black}
+    \item $\text{Var}[X] = \mathbb{E}_Y\left[\text{Var}_X[X|Y]\right] + \text{Var}_Y\left[\mathbb{E}_X[X|Y]\right]$
+\end{enumerate}
+\leavevmode\\
+\fakesection{q2}
+\noindent
+\Large{\textbf{Problem 2}}\normalsize
+\\
+
+Let $X$ and $Z$ be two independent random vectors, so that $p(X, Z) = p(X)p(Z)$. Show that the mean of their sum $Y = X+Z$ is given by the sum of the means of each of the variables separately. Similarly, show that the covariance matrix of $Y$ is given by the sum of the covariance matrices of $X$ and $Z$.
+\leavevmode\\
+\fakesection{q3}
+\noindent
+\Large{\textbf{Problem 3}}\normalsize
+\\
+
+Consider a $D$-dimensional Gaussian random variable $X$ with distribution $\mathcal{N}(x|\mu,\Sigma)$ in which the covariance $\Sigma$ is known and for which we wish to infer the mean $\mu$ from a set of observations $\mathcal{X} = \left\{X_1,\dots,X_n\right\}$. Given a prior distribution $p(\mu) =\mathcal{N}\left(\mu|\mu_0,\Sigma_0\right) $, find the corresponding posterior distribution $p(\mu|\mathcal{X})$
+
+\leavevmode\\
+\fakesection{q4}
+\noindent
+\Large{\textbf{Problem 4}}\normalsize
+\\
+
+Consider a univariate Gaussian distribution $\mathcal{N}(x|\mu, \tau^{-1})$ having conjugate Gaussian-gamma prior given by 
+$$p(\mu,\lambda) = \mathcal{N}\left(\mu|\mu_0,(\beta\lambda)^{-1}\right)\text{Gamma}(\lambda|a,b)$$
+and a dataset $\mathcal{X} = \left\{X_1,\dots,X_n\right\}$ of i.i.d. observations. Show that the posterior distribution is 
+also a Gaussian-gamma distribution of the same functional form as the prior, and write down 
+expressions for the parameters of this posterior distribution.
+
+\leavevmode\\
+\newpage
+\fakesection{q5}
+\noindent
+\Large{\textbf{Problem 5}}\normalsize
+\\
+
+Show that if two variables $X$ and $Y$ are independent, then their covariance is zero. 
+\color{blue}
+\begin{lemma}
+\label{lemma:indepexp}
+Let $X$ and $Y$ be random variable where $X\indep Y$, then $\mathbb{E}[XY] =  \mathbb{E}[X] \mathbb{E}[Y]$
+\end{lemma}
+\begin{proof}
+    Assume that $X\sim \mu(x)$ and $Y\sim \nu(y)$ where $\mu:\Omega_X\to\mathcal{B}_X$ and $\nu:\Omega_Y\to\mathcal{B}_Y$ where $\mathcal{B}$ is a Borel field, the expectation operator is defined as
+    $$\mathbb{E}[X] = \int_{\Omega_X} x\;d\mu(x)$$
+    Using the Fubini-Tonelli theorem, we can show that
+    \begin{align*}
+    \mathbb{E}[XY] &= \int_{\Omega_X}\int_{\Omega_Y} xy\;d\pi(x,y)\\
+    &= \int_{\Omega_X} x\;d\mu(x)\int_{\Omega_X} y\;d\nu(y)\\
+    &= \mathbb{E}[X]\mathbb{E}[Y]
+    \end{align*}
+\end{proof}
+\begin{sol}
+We will show that if $X\indep Y$, then $\text{cov}(X,Y) = 0$.
+Recall that the definition of covariance is 
+\begin{equation}\text{cov}(X,Y) = \mathbb{E}\left[(X-\mathbb{E}[X])(Y-\mathbb{E}[Y])\right]\end{equation}
+From this, we can simplify the covariance as
+\begin{align*}
+    \text{cov}(X,Y) &= \mathbb{E}\left[(X-\mathbb{E}[X])(Y-\mathbb{E}[Y])\right] \\
+     &= \mathbb{E}\left[XY-Y\mathbb{E}[X]Y - X\mathbb{E}[Y]  +\mathbb{E}[X] \mathbb{E}[Y])\right] \\
+     &= \mathbb{E}[XY] - \mathbb{E}[Y]\mathbb{E}[X] - \mathbb[X]\mathbb{E}[Y]  +\mathbb{E}[X] \mathbb{E}[Y]) \\
+     &= \mathbb{E}[XY] - \mathbb{E}[X] \mathbb{E}[Y]
+\end{align*}
+Since, $X\indep Y$. That implies $\mathbb{E}[XY] =  \mathbb{E}[X] \mathbb{E}[Y]$ (from lemma \ref{lemma:indepexp}). In other words, $\text{cov}(X,Y) = 0$.
+\end{sol}
+\color{black}
+\leavevmode\\
+\fakesection{q6}
+\noindent
+\Large{\textbf{Problem 6}}\normalsize
+\\
+
+Evaluate the Kullback-Leibler divergence between two Gaussians $p(x) = \mathcal{N}(x|\mu, \sigma^2)$ and $q(x) = \mathcal{N}(x|m, s^2)$ 
+\color{blue}
+\begin{sol}
+    Recall the definition of KL divergence between two measures $p(x)$ and $q(x)$ given that $p,q: \mathbb{R}\rightarrow \mathcal{B}$ where $\mathcal{B}$ is a Borel field.
+    \begin{equation}D_{KL}(p(x) || q(x))  = \int_{-\infty}^{\infty} p(x) \ln\left(\frac{p(x)}{q(x)}\right) \; dx\end{equation}
+In this case, 
+\begin{align*}
+    D_{KL}(p(x)||q(x)) &= \frac{1}{\sqrt{2\pi}\sigma}\int_{-\infty}^{\infty}  \exp\left(-\frac{(x-\mu)^2}{2\sigma^2}\right) \ln\left(\frac{\frac{1}{\sqrt{2\pi}\sigma} \exp\left(-\frac{(x-\mu)^2}{2\sigma^2}\right)}{\frac{1}{\sqrt{2\pi}s} \exp\left(-\frac{(x-m)^2}{2s^2}\right)}\right)\; dx \\
+    &=\frac{1}{\sqrt{2\pi}\sigma}\int_{-\infty}^{\infty}  \exp\left(-\frac{(x-\mu)^2}{2\sigma^2}\right) \left(\ln\left(\frac{s}{\sigma}\right) + \left[\frac{(x-m)^2}{2s^2} - \frac{(x-\mu)^2}{2\sigma^2}\right]\right) \; dx \\
+    &= \ln\left(\frac{s}{\sigma}\right) + \frac{1}{\sqrt{2\pi}\sigma}\left[\int_{-\infty}^{\infty}  \exp\left(-\frac{(x-\mu)^2}{2\sigma^2}\right) \frac{(x-m)^2}{2s^2} \; dx -\int_{-\infty}^{\infty} \exp\left(-\frac{(x-\mu)^2}{2\sigma^2}\right) \frac{(x-\mu)^2}{2\sigma^2}\; dx\right] \\
+    &= \ln\left(\frac{s}{\sigma}\right) - \frac{1}{2} + \frac{1}{\sqrt{2\pi}\sigma}\int_{-\infty}^{\infty}  \exp\left(-\frac{(x-\mu)^2}{2\sigma^2}\right) \frac{(x-m)^2}{2s^2} \; dx \\
+    &= \ln\left(\frac{s}{\sigma}\right) - \frac{1}{2} + \frac{(\mu - m)^2 + \sigma^2}{s^2}
+\end{align*}
+\end{sol}
+\color{black}
+\newpage
+\fakesection{q7}
+\noindent
+\Large{\textbf{Problem 7}}\normalsize
+\\
+
+For Inverse Gamma distribution 
+$$f(x) = \frac{\beta^\alpha}{\Gamma(\alpha)} x^{-\alpha-1}\exp\left(-\frac{\beta}{x}\right)$$
+\begin{enumerate}
+    \item Show the mean of the distribution is
+    $$\mathbb{E}[X] = \frac{\beta}{\alpha - 1}$$
+    \color{blue}
+    \begin{sol}
+    We want to show that $\mathbb{E}[X] = \frac{\beta}{\alpha - 1}$. Using the definition of expectation and the fact that 
+    \begin{equation}
+            \Gamma(\alpha) = \int_0^{\infty} x^{\alpha-1} \exp(-x) \; dx 
+    \end{equation}
+    Let $u = \frac{\beta}{x}$
+    \begin{align*}
+        \mathbb{E}[X] &= \frac{\beta^\alpha}{\Gamma(\alpha)}\beta^{-\alpha +1}\int_{0}^{\infty} u^{\alpha - 2}\exp(-u) du \\
+        & = \frac{\beta^\alpha}{\Gamma(\alpha)}\beta^{-\alpha + 1}\Gamma(\alpha-1) \\
+        & = \frac{\beta}{\alpha - 1}
+    \end{align*}
+    \end{sol}
+    \color{black}
+    \item Find maximum likelihood estimate of $\alpha$ and $\beta$ given $N$ independent sample of $x_i$
+    \color{blue}
+    \begin{sol}
+        The maximum likelihood can be evaluated from its likelihood function. Namely,
+    \begin{equation}
+        \mathcal{L}(\alpha,\beta|X) = \prod_{i=1}^{N} f(x_i|a,b)
+    \end{equation}
+    In this case, the likelihood function is
+    \begin{align*}
+        \mathcal{L}(\alpha,\beta|X) &= \left(\frac{\beta^{\alpha}}{\Gamma(\alpha)}\right)^n\exp\left(-\sum_{i=1}^N\frac{\beta}{x_i}\right) \prod_{k=1}^{N}x^{-(\alpha+1)}_k 
+    \end{align*}
+    Minimize the log-likelihood with respect to $\alpha$ while fixing $\beta$ 
+        \begin{align*}
+        \dfrac{\partial}{\partial \alpha}\ln\left(\mathcal{L}(\alpha,\beta|X)\right) &= \dfrac{\partial}{\partial \alpha}\ln\left[\left(\frac{\beta^{\alpha}}{\Gamma(\alpha)}\right)^N\exp\left(-\sum_{i=1}^N\frac{\beta}{x_i}\right) \prod_{k=1}^{N}x^{-(\alpha+1)}_k\right]\\
+        &=\dfrac{\partial}{\partial \alpha} \left[N\ln\left(\frac{\beta^{\alpha}}{\Gamma(\alpha)}\right) -\sum_{i=1}^{N}\frac{\beta}{x_k}\right]
+    \end{align*}
+    \end{sol}
+    \color{black}
+    \item Discuss if $f(x)$ follows an exponential family distribution or not. 
+    \color{blue}
+    \begin{sol}
+    To show that $f(x|\theta)$ is the exponential family, we need to show that
+    $$f(x|\theta) = h(x)c(\theta) \exp(T(x)\tau(\theta))$$
+    From the definition of $f(x)$, we can expand it as
+    \begin{align*}
+        f(x) &= \frac{\beta^\alpha}{\Gamma(\alpha)} x^{-\alpha-1}\exp\left(-\frac{\beta}{x}\right) \\
+        &= \frac{\beta^\alpha}{\Gamma(\alpha)}\exp\left(\ln(x^{-\alpha-1})\right)\exp\left(-\frac{\beta}{x}\right)\\
+        &=  \frac{\beta^\alpha}{\Gamma(\alpha)} \exp\left((-\alpha-1)\ln(x) - \frac{\beta}{x}\right)
+    \end{align*}
+    In this case, $T(x) = \begin{bmatrix}\ln(x) & \frac{1}{x}\end{bmatrix}$ and $\tau(\theta) = \begin{bmatrix}
+        -\alpha - 1 & \beta
+    \end{bmatrix}$, $c(\theta) =\frac{\beta^\alpha}{\Gamma(\alpha)}$ and $h(x) = 1$. Thus, $f(x)$ is in the exponential family.
+    \end{sol}
+    \color{black}
+    \item Discuss if $X$ is an inverse gamma distribution with $\alpha =1$  and $\beta =c$ , then $Y=1/X$ is an exponential distribution with rate $c$ 
+    \color{blue}
+    \begin{sol}
+        Consider the name of the inverse gamma distribution; its inverse would be gamma distribution.
+    \end{sol}
+    \color{black}
+    \item For distribution $Y$, and with a prior on $c$ define the posterior of $c$. Pick a proper prior for $c$ 
+first. 
+\end{enumerate}
+\end{document} 
