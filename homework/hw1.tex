@@ -84,6 +84,17 @@ Consider two variables $X$ and $Y$ with joint distribution $p(x, y)$. Prove the 
     \end{sol}
     \color{black}
     \item $\text{Var}[X] = \mathbb{E}_Y\left[\text{Var}_X[X|Y]\right] + \text{Var}_Y\left[\mathbb{E}_X[X|Y]\right]$
+    \color{blue}
+    \begin{sol}
+        Consider the LHS,
+\begin{align*}
+    \text{Var}[X] &= \mathbb{E}[X^2] - \mathbb{E}^2[X] \\
+    &= \mathbb{E}\left[\text{Var}[X|Y]+ \mathbb{E}^2[X|Y]\right]- \mathbb{E}^2[\mathbb{E}[X|Y]]\\
+    &= \mathbb{E}\left[\text{Var}[X|Y]\right] + \mathbb{E}[\mathbb{E}^2[X|Y]]- \mathbb{E}^2[\mathbb{E}[X|Y]]\\
+    &= \mathbb{E}_Y\left[\text{Var}_X[X|Y]\right] + \text{Var}_Y\left[\mathbb{E}_X[X|Y]\right]
+\end{align*}
+\end{sol}
+\color{black}
 \end{enumerate}
 \leavevmode\\
 \fakesection{q2}
@@ -92,6 +103,25 @@ Consider two variables $X$ and $Y$ with joint distribution $p(x, y)$. Prove the 
 \\
 
 Let $X$ and $Z$ be two independent random vectors, so that $p(X, Z) = p(X)p(Z)$. Show that the mean of their sum $Y = X+Z$ is given by the sum of the means of each of the variables separately. Similarly, show that the covariance matrix of $Y$ is given by the sum of the covariance matrices of $X$ and $Z$.
+\color{blue}
+\begin{sol}
+    Consider the mean of joint distribution $Y = X+Z$,
+\begin{align*}
+    \mathbb{E}[Y] &= \int_{\Omega_X}\int_{\Omega_Z}yf_{Y}(y)\;dy\;dx\\
+    &= \int_{\Omega_X}\int_{\Omega_Z}(x+z)f_{X}(x)f_{Z}(z)\;dx\;dz\\
+    &= \int_{\Omega_X}\int_{\Omega_Z}xf_{X}(x)f_{Z}(z)\;dx\;dz + \int_{\Omega_X}\int_{\Omega_Z}zf_{X}(x)f_{Z}(z)\;dx\;dz\\
+    &= \int_{\Omega_X}xf_{X}(x)\;dx + \int_{\Omega_Z}zf_{Z}(z)\;dz\\
+    &= \mathbb{E}[X] + \mathbb{E}[Z]
+\end{align*}
+And also consider the covariance matrix of joint distribution $Y = X+Z$,
+\begin{align*}
+    \text{cov}[Y] &= \mathbb{E}\left[\left(Y-\mathbb{E}[Y]\right)\left(Y-\mathbb{E}[Y]\right)^T\right]\\
+    &= \mathbb{E}\left[\left(X+Z-\mathbb{E}[X]-\mathbb{E}[Z]\right)\left(X+Z-\mathbb{E}[X]-\mathbb{E}[Z]\right)^T\right]\\
+    &= \mathbb{E}\left[\left(X-\mathbb{E}[X]\right)\left(X-\mathbb{E}[X]\right)^T\right] + \mathbb{E}\left[\left(Z-\mathbb{E}[Z]\right)\left(Z-\mathbb{E}[Z]\right)^T\right]\\
+    &= \text{cov}[X] + \text{cov}[Z]
+\end{align*}
+\end{sol}
+\color{black}
 \leavevmode\\
 \fakesection{q3}
 \noindent
