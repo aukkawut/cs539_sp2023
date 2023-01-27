@@ -130,6 +130,25 @@ And also consider the covariance matrix of joint distribution $Y = X+Z$,
 
 Consider a $D$-dimensional Gaussian random variable $X$ with distribution $\mathcal{N}(x|\mu,\Sigma)$ in which the covariance $\Sigma$ is known and for which we wish to infer the mean $\mu$ from a set of observations $\mathcal{X} = \left\{X_1,\dots,X_n\right\}$. Given a prior distribution $p(\mu) =\mathcal{N}\left(\mu|\mu_0,\Sigma_0\right) $, find the corresponding posterior distribution $p(\mu|\mathcal{X})$
 
+\color{blue}
+\begin{sol}
+    The likelihood of the multivariate Gaussian distribution is given by,
+\begin{align*}
+\mathcal{L}(\mu|X,\Sigma) &= \left(\prod_{i=1}^n \frac{1}{(2\pi)^{D/2}|\Sigma|^{1/2}} \exp\left((X_i-\mu)^\top\Sigma^{-1}(X_i-\mu)\right)\right) \\
+&= \frac{1}{(2\pi)^{Dn/2}|\Sigma|^{n/2}} \exp\left(-\frac{1}{2}\sum_{i=1}^n(X_i-\mu)^\top\Sigma^{-1}(X_i-\mu)\right)
+\end{align*}
+with prior,
+\begin{align*}
+p(\mu|\mu_0,\Sigma_0) &= \frac{1}{(2\pi)^{D/2}|\Sigma_0|^{1/2}} \exp\left(-\frac{1}{2}(\mu-\mu_0)^\top\Sigma_0^{-1}(\mu-\mu_0)\right)
+\end{align*}
+The posterior distribution would be
+\begin{align*}
+p(\mu|\mathcal{X},\mu_0,\Sigma_0) &\propto \frac{1}{(2\pi)^{D/2}|\Sigma|^{1/2}} \exp\left(-\frac{1}{2}(\mu-\mu_0)^\top\Sigma_0^{-1}(\mu-\mu_0)\right)\frac{1}{(2\pi)^{Dn/2}|\Sigma|^{n/2}} \exp\left(-\frac{1}{2}\sum_{i=1}^n(X_i-\mu)^\top\Sigma^{-1}(X_i-\mu)\right)\\
+&= \frac{1}{(2\pi)^{(n+1)D/2}\left(|(\Sigma)^n\Sigma_0|\right)^{1/2}} \exp\left(-\frac{1}{2}\left[(\mu-\mu_n)^\top\Sigma_0^{-1}(\mu-\mu_n) +\sum_{i=1}^n(X_i-\mu)^\top\Sigma^{-1}(X_i-\mu) \right]\right)
+\end{align*}
+which resemble the multivariate Gaussian distribution.
+\end{sol}
+\color{black}
 \leavevmode\\
 \fakesection{q4}
 \noindent
@@ -142,6 +161,22 @@ and a dataset $\mathcal{X} = \left\{X_1,\dots,X_n\right\}$ of i.i.d. observation
 also a Gaussian-gamma distribution of the same functional form as the prior, and write down 
 expressions for the parameters of this posterior distribution.
 
+\color{blue}
+\begin{sol}
+    Consider the fact that the conjugate prior of the Gaussian distribution is the Gaussian-gamma distribution. The posterior distribution would be in the same family due to the fact that
+    $$\text{posterior} = c\times\text{conjugate prior} \propto \text{(likelihood)(prior)}$$
+    One can show this by evaluating the likelihood with Gamma prior.
+    \begin{align*}
+    \mathcal{L}(\mu,\lambda|\mathcal{X})P(\mu,\lambda|a,b) &= \left(\prod_{i=1}^n \frac{1}{\sqrt{2\pi\tau^{-1}}} \exp\left(-\frac{\tau}{2}(X_i-\mu)^2\right)\right)\frac{\lambda^{a-1}e^{-b\lambda}}{\Gamma(a)}\\
+    &= \frac{1}{(2\pi\tau^{-1})^{n/2}\Gamma(a)} \exp\left(-\frac{\tau}{2}\sum_{i=1}^n(X_i-\mu)^2\right)\lambda^{a-1}e^{-b\lambda}
+    \end{align*}
+    Notice that if we were to substitute $\tau$ with $\beta\lambda$, we will get
+    \begin{align*}
+    \mathcal{L}(\mu,\lambda|\mathcal{X})P(\mu,\lambda|a,b) &= \frac{(\beta\lambda)^{n/2}}{(2\pi)^{n/2}\Gamma(a)} \exp\left(-\frac{\beta\lambda}{2}\sum_{i=1}^n(X_i-\mu)^2\right)\lambda^{a-1}e^{-b\lambda}
+    \end{align*}
+    which is basically Gaussian-gamma distribution. 
+\end{sol}
+\color{black}
 \leavevmode\\
 \newpage
 \fakesection{q5}
