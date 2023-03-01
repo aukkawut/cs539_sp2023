@@ -1,0 +1,283 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{amsthm}
+\usepackage{mathrsfs}
+\usepackage{mathtools}
+\usepackage{fancyvrb}
+\usepackage[margin=1in]{geometry}
+\usepackage{fancyhdr}
+\usepackage[super]{nth}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage{mathrsfs}
+\usepackage{tzplot}
+\usepackage{pgfplots, tikz}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\usepackage{titlesec}
+\usepackage{lmodern}
+\usepackage{etoolbox}
+\usepackage{csquotes}
+\usepackage{xcolor}
+\usepackage{graphicx}
+\usepackage[shortlabels]{enumitem}
+\usepackage{listings}
+\usepackage{bm}
+%\usepackage{lipsum}
+
+\makeatletter
+\patchcmd{\section}{-3.5ex \@plus -1ex \@minus -.2ex}{-3.5ex \@plus -1ex \@minus -.2ex\setlength{\leftskip}{0cm}}{}{}
+\patchcmd{\subsection}{-3.25ex\@plus -1ex \@minus -.2ex}{3.25ex\@plus -1ex \@minus -.2ex\setlength{\leftskip}{0cm}}{}{}
+\patchcmd{\subsection}{1.5ex \@plus .2ex}{1.5ex \@plus .2ex\setlength{\leftskip}{2cm}}{}{}
+\makeatother
+\titleformat{\section}
+  {\normalfont\fontsize{12}{15}\bfseries}{\thesection}{1em}{}
+\pagestyle{fancy}
+\fancyhf{}
+\rhead{Aukkawut Ammartayakun}
+\lhead{CS 539 Machine Learning: Homework 3}
+\cfoot{\thepage}
+\title{Homework 3}
+\author{Aukkawut Ammartayakun\\CS 539 Machine Learning}
+\date{Spring 2023}
+\newcommand{\vtt}[1]{%
+  \text{\normalfont\ttfamily\detokenize{#1}}%
+}
+
+
+
+\newcommand{\indep}{\perp \!\!\! \perp}
+\begin{document}
+\newcommand{\fakesection}[1]{%
+  \par\refstepcounter{section}% Increase section counter
+  \sectionmark{#1}% Add section mark (header)
+  \addcontentsline{toc}{section}{\protect\numberline{\thesection}#1}% Add section to ToC
+  % Add more content here, if needed.
+}
+\newcommand{\fakesubsection}[1]{%
+  \par\refstepcounter{subsection}% Increase subsection counter
+  \subsectionmark{#1}% Add subsection mark (header)
+  \addcontentsline{toc}{subsection}{\protect\numberline{\thesubsection}#1}% Add subsection to ToC
+  % Add more content here, if needed.
+}
+\theoremstyle{definition}
+\newtheorem*{sol}{Solution}
+\maketitle
+\fakesection{q1}
+\noindent
+\Large{\textbf{Problem 1}}\normalsize
+\\
+\begin{table}[h]
+    \begin{tabular}{llll}
+    \hline
+    $a$ & $b$ & $c$ & $p(a,b,c)$ \\ \hline
+    0   & 0   & 0   & 0.192      \\
+    0   & 0   & 1   & 0.144      \\
+    0   & 1   & 0   & 0.048      \\
+    0   & 1   & 1   & 0.216      \\
+    1   & 0   & 0   & 0.192      \\
+    1   & 0   & 1   & 0.064      \\
+    1   & 1   & 0   & 0.048      \\
+    1   & 1   & 1   & 0.096      \\ \hline
+    \end{tabular}
+    \end{table}
+% b = 0, c = 0 -> 0.192 + 0.192 = 0.384
+% b = 0, c = 1 -> 0.144 + 0.064 = 0.208
+% b = 1, c = 0 -> 0.048 + 0.048 = 0.096
+% b = 1, c = 1 -> 0.216 + 0.096 = 0.312
+% a = 0, c = 0 -> 0.192 + 0.048 = 0.240
+% a = 0, c = 1 -> 0.144 + 0.216 = 0.360
+% a = 1, c = 0 -> 0.192 + 0.048 = 0.240
+% a = 1, c = 1 -> 0.064 + 0.096 = 0.160
+Consider three binary variables $a, b, c  \in \{0, 1\}$ having the joint distribution given in the above table. 
+Show by direct evaluation that this distribution has the property that a and b are marginally 
+dependent, so that $p(a, b) \neq p(a)p(b)$, but that they become independent when conditioned on $c$, so 
+that $p(a, b|c) = p(a|c)p(b|c)$ for both $c = 0$ and $c = 1$. 
+
+\color{blue}
+\begin{sol}
+  We want to show that $p(a, b) \neq p(a)p(b)$ and $p(a, b|c) = p(a|c)p(b|c)$ for both $c = 0$ and $c = 1$.\\
+First, $p(a,b) = p(a,b|c = 0) + p(a,b|c = 1)$ in which from the table has 4 different values depending on $a$ and $b$ whereas
+$p(a) = \sum_{b,c}p(a,b,c)$ and $p(b) = \sum_{a,c} p(a,b,c)$ both have 2 different values. Hence, $p(a,b) \neq p(a)p(b)$.
+
+Second, using the same logic as previous one to get $p(c = 0) = \sum_{a,b} p(a,b,c = 0) = 0.48$ and $p(c = 1) = 1-p(c = 0) = 0.52$.\\
+Using Bayes' rule, one can see that
+$$p(a,b|c) = \frac{p(a,b,c)}{p(c)} = \begin{cases}
+    0.192/0.48 & (a,b,c) = (0,0,0) \\
+    0.144/0.52 & (a,b,c) = (0,0,1) \\
+    0.048/0.48 & (a,b,c) = (0,1,0) \\
+    0.216/0.52 & (a,b,c) = (0,1,1) \\
+    0.192/0.48 & (a,b,c) = (1,0,0) \\
+    0.064/0.52 & (a,b,c) = (1,0,1) \\
+    0.048/0.48 & (a,b,c) = (1,1,0) \\
+    0.096/0.52 & (a,b,c) = (1,1,1)
+\end{cases}$$
+with $p(b|c) =\frac{p(b,c)}{p(c)}=\begin{cases}
+    0.384/0.48 & (b,c) = (0,0)\\
+    0.208/0.52 & (b,c) = (0,1)\\
+    0.096/0.48 & (b,c) = (1,0)\\
+    0.312/0.52 & (b,c) = (1,1)
+\end{cases}$ and $p(a|c) = \frac{p(a,c)}{p(c)}=\begin{cases}
+    0.240/0.48 & (a,c) = (0,0)\\
+    0.360/0.52 & (a,c) = (0,1)\\
+    0.240/0.48 & (a,c) = (1,0)\\
+    0.160/0.52 & (a,c) = (1,1) 
+\end{cases}$.
+
+Multiplication shows that
+$p(a|c)p(b|c) = \begin{cases}
+    (0.384/0.48)(0.240/0.48) & (a,b,c) = (0,0,0) \\
+    (0.208/0.52)(0.360/0.52) & (a,b,c) = (0,0,1) \\
+    (0.384/0.48)(0.240/0.48)& (a,b,c) = (0,1,0) \\
+    \vdots & \vdots \\
+    (0.312/0.52)(0.160/0.52) & (a,b,c) = (1,1,1)
+\end{cases}$ 
+
+which all of them are equal. Thus, we can conclude that $p(a,b|
+c) = p(a|c)p(b|c)$ for both $c = 0$ and $c = 1$.
+\end{sol}
+\color{black}
+\leavevmode\\
+\fakesection{q2}
+\noindent
+\Large{\textbf{Problem 2}}\normalsize
+\\
+
+Evaluate the distributions $p(a)$, $p(b|c)$, and $p(c|a)$ corresponding to the joint distribution given in the 
+above table. Hence show by direct evaluation that $p(a, b, c) = p(a)p(c|a)p(b|c)$. Draw the 
+corresponding directed graph.
+
+\color{blue}
+\begin{sol}
+    We want to show that $p(a, b, c) = p(a)p(c|a)p(b|c)$.\\
+First, $p(a) = \sum_{b,c}p(a,b,c) = \begin{cases}
+    0.6 & a = 0 \\
+    0.4 & a = 1
+\end{cases}$ 
+and $p(b|c) =\frac{p(b,c)}{p(c)}=\begin{cases}
+    0.384/0.48 & (b,c) = (0,0)\\
+    0.208/0.52 & (b,c) = (0,1)\\
+    0.096/0.48 & (b,c) = (1,0)\\
+    0.312/0.52 & (b,c) = (1,1)
+\end{cases}$.
+Lastly, $p(c|a) = \frac{p(a,c)}{p(a)}=\begin{cases}
+    0.240/0.6 & (a,c) = (0,0)\\
+    0.360/0.4 & (a,c) = (0,1)\\
+    0.240/0.6 & (a,c) = (1,0)\\
+    0.160/0.4 & (a,c) = (1,1)
+\end{cases}$.
+Evaluating the product yields the same result. Thus, the relationship is as followed
+$$a \rightarrow c \rightarrow b$$
+\end{sol}
+\color{black}
+\leavevmode\\
+\fakesection{q3}
+\noindent
+\Large{\textbf{Problem 3}}\normalsize
+\\
+
+Consider two discrete variables $x$ and $y$ each having three possible states, for example $x, y \in \{0, 1, 2\}$. 
+Construct a joint distribution $p(x, y)$ over these variables having the property that the value $\hat{x}$ that 
+maximizes the marginal $p(x)$, along with the value $\hat{y}$ that maximizes the marginal $p(y)$, together have 
+probability zero under the joint distribution, so that $p(\hat{x},\hat{y}) = 0$.
+\color{blue}
+\begin{sol}
+    \begin{table}[h]
+        \begin{tabular}{llll}
+        \hline
+        {\color[HTML]{3531FF} }        & {\color[HTML]{3531FF} $x=0$} & {\color[HTML]{3531FF} $x=1$} & {\color[HTML]{3531FF} $x=2$} \\ \hline
+        {\color[HTML]{3531FF} $y=0$}   & {\color[HTML]{3531FF} 0}     & {\color[HTML]{3531FF} 0.4}   & {\color[HTML]{3531FF} 0}     \\
+        {\color[HTML]{3531FF} $y = 1$} & {\color[HTML]{3531FF} 0.3}   & {\color[HTML]{3531FF} 0}     & {\color[HTML]{3531FF} 0}     \\
+        {\color[HTML]{3531FF} $y=2$}   & {\color[HTML]{3531FF} 0.3}   & {\color[HTML]{3531FF} 0}     & {\color[HTML]{3531FF} 0}     \\ \hline
+        \end{tabular}
+        \end{table}
+        $\arg\max_x p(x) = 0$, $\arg\max_y p(y) = 0$ and, $p(\hat{x},\hat{y}) = 0$.
+\end{sol}
+\color{black}
+\leavevmode\\
+\fakesection{q4}
+\newpage
+\noindent
+\Large{\textbf{Problem 4}}\normalsize
+\\
+
+Suppose we wish to use the EM algorithm to maximize the posterior distribution over parameters $p(\bm{\theta}|\mathbf{X})$ for a model containing latent variables, where $X$ is the observed data set. 
+Show that the E step remains the same as in the maximum likelihood case, whereas in the M step the quantity to be 
+maximized is given by $Q(\bm{\theta}, \bm{\theta}_{\text{old}}) + \ln p(\bm{\theta})$ where $Q(\bm{\theta}, \bm{\theta}_{\text{old}})$ is defined by
+\begin{equation}
+    Q(\bm{\theta}, \bm{\theta}_{\text{old}}) = \sum_\mathbf{Z} p(\mathbf{Z}|\mathbf{X}, \bm{\theta}_{\text{old}}) \ln p(\mathbf{X}, \mathbf{Z}|\bm{\theta})
+\end{equation}
+\color{blue}
+\begin{sol}
+As in the normal EM algorithm, the difference between the normal one and this one is instead of maximizing the likelihood function, we maximize the posterior distribution. From
+$$p(\bm{\theta}|\mathbf{X}) \propto p(\mathbf{X}|\bm{\theta}) p(\bm{\theta})$$
+for the sake of generality, let say $p(\bm{\theta}|\mathbf{X}) = kp(\mathbf{X}|\bm{\theta}) p(\bm{\theta})$. Then, we have
+\begin{align*}
+    \ln p(\bm{\theta}|\mathbf{X}) &= \ln \left(kp(\mathbf{X}|\bm{\theta})p(\bm{\theta})\right)\\
+    &= \ln(k \sum_{\mathbf{Z}} p(\mathbf{X},\mathbf{Z}|\bm{\theta})p(\bm{\theta}))\\
+    &= \ln k + \ln \left(\sum_{\mathbf{Z}} p(\mathbf{X},\mathbf{Z}|\bm{\theta})\right) + \ln p(\bm{\theta})
+\end{align*}
+This shows that the only difference in comparison to the given $Q(\bm{\theta}, \bm{\theta}_{\text{old}})$ is the term $\ln p(\bm{\theta})$ which the complete-data log likelihood function is only used in M step.
+Thus, E step remains the same but $Q(\bm{\theta}, \bm{\theta}_{\text{old}})$ is replaced by $Q(\bm{\theta}, \bm{\theta}_{\text{old}}) + \ln p(\bm{\theta})$ from linear separability of logarithm function as shown above.
+\end{sol}
+\color{black}
+\leavevmode\\
+
+\fakesection{q5}
+\noindent
+\Large{\textbf{Problem 5}}\normalsize
+\\
+
+Consider a special case of a Gaussian mixture model in which the covariance matrices $\Sigma_k$ of the 
+components are all constrained to have a common value $\Sigma$. Derive the EM equations for maximizing 
+the likelihood function under such a model.
+\color{blue}
+\begin{sol}
+Let say we constraint the covariance to be homogenous.
+Since the only change here is the covariance, we can only differentiate this with respect to $\bm{\Sigma}$ in order to chage the updated value of $\bm{\Sigma}$ (which is the only thing that changed from normal EM).
+The result equation for updating $\bm{\Sigma}$ is
+\begin{align*}
+Q(\bm{\theta}, \bm{\theta}_{\text{old}}) &= -\frac{N}{2} \ln |\bm{\Sigma}| + \sum_{n=1}^{N}\sum_{k=1}^K \gamma(z_{nk})(\mathbf{x}_n - \mathbf{\mu}_k)\Sigma^{-1}(\mathbf{x}_n - \mathbf{\mu}_k)^\top
+\end{align*}
+As mentioned that the covariance are homogenous, we can factor it out, differentiate that with respect to the $\bm{\Sigma}$ and set it to zero to obtain:
+\begin{align*}
+\bm{\Sigma} &= \frac{1}{N} \sum_{n=1}^N \sum_{k=1}^K \gamma(z_{nk})(\mathbf{x}_n - \mathbf{\mu}_k)(\mathbf{x}_n - \mathbf{\mu}_k)^\top
+\end{align*}
+
+\end{sol}
+\color{black}
+\leavevmode\\
+\newpage
+\fakesection{q6}
+\noindent
+\Large{\textbf{Problem 6}}\normalsize
+\\
+
+Consider a Bernoulli mixture model as discussed in Section 9.3.3, together with a prior distribution 
+$p(\mu_k|a_k, b_k)$ over each of the parameter vectors $\mu_k$ given by the beta distribution (2.13), 
+\begin{equation}
+    \text{Beta}(\mu|a,b) = \frac{\Gamma(a+b)}{\Gamma(a)\Gamma(b)} \mu^{a-1} (1-\mu)^{b-1}
+\end{equation}
+and a Dirichlet prior $p(\bm{\pi}|\bm{\alpha})$ given by (2.38)
+\begin{equation}
+    \text{Dir}(\bm{\mu}|\bm{\alpha}) = \frac{\Gamma(\alpha_0)}{\Gamma(\alpha_1)\dots\Gamma(\alpha_K)} \prod_{k=1}^K \mu_k^{\alpha_k-1}
+\end{equation}
+Derive the EM algorithm for maximizing the posterior 
+probability $p(\bm{\mu},\bm{\pi}|\mathbf{X})$.
+\color{blue}
+\begin{sol}
+In the similar manner to Problem 4, we can see that at M step, we need to maximize $Q(\bm{\theta}, \bm{\theta}_{\text{old}}) + \ln p(\bm{\theta})$.
+As discussed in the section 9.3.3 that
+\begin{equation}
+    \mathbb{E}_\mathbf{Z}[\ln p(\mathbf{X},\mathbf{Z}| \bm{\mu},\bm{\pi})] = \sum_{n=1}^N \sum_{k=1}^K \gamma(z_{nk})\left[\ln \pi_k + \sum_{i=1}^D (x_{ni}\ln \mu_{ki} + (1-x_{n_i}\ln(1-\mu_{ki}))\right]
+\end{equation}
+given the prior, we can altered the equation to add the log-transformed prior term
+$$\ln p(\bm{\theta}) = \sum_{j=1}^K\sum_{m=1}^D \left[(a_j-1)\ln \mu_{jm} + (b_j-1)\ln(1-\mu_{jm})\right] + \sum_{l=1}^K (\alpha_l-1) \ln \pi_l$$
+Differentiating the above notion with respect to $\mu_{ki}$ and set it to zero to get $\mu_{ki}$ update. Now, maximizing the $Q(\bm{\theta}, \bm{\theta}_{\text{old}})$ to get $\pi_k$ update.
+\end{sol}
+\color{black}
+\end{document}
+
