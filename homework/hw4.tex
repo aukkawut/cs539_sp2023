@@ -1,0 +1,138 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{amsthm}
+\usepackage{mathrsfs}
+\usepackage{mathtools}
+\usepackage{fancyvrb}
+\usepackage[margin=1in]{geometry}
+\usepackage{fancyhdr}
+\usepackage[super]{nth}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage{mathrsfs}
+\usepackage{tzplot}
+\usepackage{pgfplots, tikz}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\usepackage{titlesec}
+\usepackage{lmodern}
+\usepackage{etoolbox}
+\usepackage{csquotes}
+\usepackage{xcolor}
+\usepackage{graphicx}
+\usepackage[shortlabels]{enumitem}
+\usepackage{listings}
+\usepackage{bm}
+%\usepackage{lipsum}
+
+\makeatletter
+\patchcmd{\section}{-3.5ex \@plus -1ex \@minus -.2ex}{-3.5ex \@plus -1ex \@minus -.2ex\setlength{\leftskip}{0cm}}{}{}
+\patchcmd{\subsection}{-3.25ex\@plus -1ex \@minus -.2ex}{3.25ex\@plus -1ex \@minus -.2ex\setlength{\leftskip}{0cm}}{}{}
+\patchcmd{\subsection}{1.5ex \@plus .2ex}{1.5ex \@plus .2ex\setlength{\leftskip}{2cm}}{}{}
+\makeatother
+\titleformat{\section}
+  {\normalfont\fontsize{12}{15}\bfseries}{\thesection}{1em}{}
+\pagestyle{fancy}
+\fancyhf{}
+\rhead{Aukkawut Ammartayakun}
+\lhead{CS 539 Machine Learning: Homework 4}
+\cfoot{\thepage}
+\title{Homework 3}
+\author{Aukkawut Ammartayakun\\CS 539 Machine Learning}
+\date{Spring 2023}
+\newcommand{\vtt}[1]{%
+  \text{\normalfont\ttfamily\detokenize{#1}}%
+}
+
+
+
+\newcommand{\indep}{\perp \!\!\! \perp}
+\begin{document}
+\newcommand{\fakesection}[1]{%
+  \par\refstepcounter{section}% Increase section counter
+  \sectionmark{#1}% Add section mark (header)
+  \addcontentsline{toc}{section}{\protect\numberline{\thesection}#1}% Add section to ToC
+  % Add more content here, if needed.
+}
+\newcommand{\fakesubsection}[1]{%
+  \par\refstepcounter{subsection}% Increase subsection counter
+  \subsectionmark{#1}% Add subsection mark (header)
+  \addcontentsline{toc}{subsection}{\protect\numberline{\thesubsection}#1}% Add subsection to ToC
+  % Add more content here, if needed.
+}
+\theoremstyle{definition}
+\newtheorem*{sol}{Solution}
+\maketitle
+\fakesection{q1}
+\noindent
+\Large{\textbf{Problem 1}}\normalsize
+\\
+
+Consider a hidden Markov model in which the emission densities are represented by a parametric
+model $p(x|z,w)$, such as a linear regression model or a neural network, in which $w$ is a vector of
+adaptive parameters. Describe how the parameters $w$ can be learned from data using maximum
+likelihood.
+
+\color{blue}
+\begin{sol}
+  Given that $w$ is the parameters of the parametric model, one can define the likelihood using the structure of HMM (from emission density, which we assume to be a parametric model) as product of the 
+  emission density and the transition density. Now, we can just use EM algorithm to find the maximum likelihood of $w$.
+\end{sol}
+\color{black}
+\leavevmode\\
+\fakesection{q2}
+\noindent
+\Large{\textbf{Problem 2}}\normalsize
+\\
+
+Show that the finite sample estimator $f$ defined by (11.2) 
+\[\hat{f} = \frac{1}{L} \sum_{l=1}^L f(\mathbf{z}^{(l)})\]
+has mean equal to $\mathbb{E}[f]$ and variance given
+by (11.3)
+\[\text{Var}[\hat{f}] = \frac{1}{L} \mathbb{E}[(f - \mathbb{E}[f])^2]\]
+
+\color{blue}
+\begin{sol}
+    It is clear that,
+    \begin{align*}
+        \mathbb{E}[\hat{f}] &= \mathbb{E}\left[\frac{1}{L} \sum_{l=1}^L f(\mathbf{z}^{(l)})\right]\\
+        &= \frac{1}{L} \sum_{l=1}^L \mathbb{E}[f(\mathbf{z}^{(l)})]\\
+        &= \frac{1}{L} \sum_{l=1}^L \mathbb{E}[f]\\
+        &= \mathbb{E}[f]
+    \end{align*}
+    We can also show that
+    \begin{align*}
+        \text{Var}[\hat{f}] &= \mathbb{E}[(\hat{f}-\mathbb{E}[\hat{f}])^2]\\
+        &= \mathbb{E}\left[\left(\frac{1}{L} \sum_{l=1}^L f(\mathbf{z}^{(l)})-\mathbb{E}[f]\right)^2\right]
+    \end{align*}
+    Since $\hat{f}$ is an unbiased estimator of $f$, the summation terms after distributing the quadratic form, will be $\frac{1}{L}\mathbb{E}[f^2]$ which then leads to the desired result.
+\end{sol}
+\color{black}
+\leavevmode\\
+\fakesection{q3}
+\noindent
+\Large{\textbf{Problem 3}}\normalsize
+\\
+
+Suppose that $z$ has a uniform distribution over the interval $[0, 1]$. Show that the variable $y = b \tan
+z + c$ has a Cauchy distribution given by (11.16). 
+\[ q(z) = \frac{k}{1+(z-c)^2/b^2}\]
+\color{blue}
+\begin{sol}
+We will show that $y$ has a Cauchy distribution. We know that the transformation of $u(z)$ to $q(y)$ can 
+be done with the Jacobian determinant. We know that $y = b \tan z + c$ or $z = \arctan\left(\frac{y-c}{b}\right)$ and $z \sim U(0,1)$. We can
+calculate the Jacobian determinant and transform that as
+\begin{align*}
+    q(y) &= u(z)\left|\frac{dz}{dy}\right|\\
+    &= \left|\frac{dz}{dy}\right|\\
+    &=  \frac{1}{b}\frac{1}{1 + \left(\frac{y - c}{b}\right)^2}
+\end{align*}
+Without loss of generality, we can assume that $\frac{1}{b} = k$ and get what we desired.
+\end{sol}
+\color{black}
+
+\end{document}
+
